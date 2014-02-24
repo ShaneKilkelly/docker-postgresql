@@ -1,33 +1,40 @@
-FROM base:ubuntu-quantal
-MAINTAINER Ullrich Schäfer <ullrich@seidbereit.de>
+FROM ubuntu
+MAINTAINER Shane Kilkelly <shane@kilkelly.me>
+
 
 # Exposes
 EXPOSE 5432
 
+
 # Credentials
 ENV USERNAME docker
-ENV PASS d0cker
+ENV PASS docker
 
-# update apt sources to use hetzner mirror
-#RUN echo "deb http://de.archive.ubuntu.com/ubuntu/ quantal main universe multiverse" > /etc/apt/sources.list
-RUN echo "deb ftp://mirror.hetzner.de/ubuntu/packages quantal main restricted universe multiverse" > /etc/apt/sources.list
 
-# Update the package repository
+RUN apt-key adv --keyserver keyserver.ubuntu.com \
+  --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
+
+RUN echo \
+  "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" \
+  > /etc/apt/sources.list.d/pgdg.list
+
 RUN apt-get update
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y curl psmisc
 
-# Install Dockyard
-RUN curl -o /usr/local/bin/dockyard https://raw.github.com/dynport/dockyard/master/dockyard
-RUN chmod 0755 /usr/local/bin/dockyard
+RUN apt-get -y -q install \
+  python-software-properties \
+  software-properties-common
 
-RUN dockyard install postgresql 9.2.4
+RUN apt-get -y -q install \
+  postgresql-9.3 \
+  postgresql-client-9.3 \
+  postgresql-contrib-9.3
 
-RUN useradd postgres
 
-ADD pg_hba.conf     /etc/postgresql/9.2/main/
-ADD pg_ident.conf   /etc/postgresql/9.2/main/
-ADD postgresql.conf /etc/postgresql/9.2/main/
+ADD pg_hba.conf     /etc/postgresql/9.3/main/
+ADD pg_ident.conf   /etc/postgresql/9.3/main/
+ADD postgresql.conf /etc/postgresql/9.3/main/
+
 
 # main entry
 ADD start /start

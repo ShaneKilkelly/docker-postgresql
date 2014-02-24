@@ -2,31 +2,26 @@
 
 ## Info
 
-This Dockerfile creates a container running PostgreSQL 9.2.4.
+This Dockerfile creates a container running PostgreSQL 9.3
 
 Here's what it does in particular:
 
-- building Postgresql using [dockyard](https://github.com/dynport/dockyard)
+- Install PostgreSQL
 - exposing it on port `5432`
-- initializes a database in `/var/lib/postgresql/9.2/main`
-- inserts a superuser in the database: `docker:d0cker` (change in the Dockerfile)
+- initializes a database in `/data`
+- inserts a superuser in the database: `docker:docker` (change in the Dockerfile)
 
 
 ## Install
 
-- `docker build -t "postgresql:9.2.4" .`
-- `docker run -d postgresql:9.2.4`
+- `docker build -t "postgresql9.3" .`
+- `docker run -d postgresql9.3`
 
 
 ## Persistance
 
 You can mount the database directory as a volume to persist your data:
 
-`docker run -d -v $HOME/.d_volumes/postgres/:/var/lib/postgresql postgresql:9.2.4`
+`docker run -t -i -rm -p 127.0.0.1:5432:5432 -v /data/pg:/data -name pg postgresql9.3`
 
-But before you can do so you first need to create the source folder: `mkdir -p $HOME/.d_volumes/postgres`
-
-
-## Meta
-
-Build with docker version `0.5.1`
+But before you can do so you first need to create the source folder: `mkdir -p /data/pg`
