@@ -22,6 +22,6 @@ Here's what it does in particular:
 
 You can mount the database directory as a volume to persist your data:
 
-`docker run -t -i -rm -p 127.0.0.1:5432:5432 -v /data/pg:/data -name pg postgresql9.3`
+`docker run -p 127.0.0.1:5432:5432 -v /data/pg:/data -name pg postgresql9.3`
 
 But before you can do so you first need to create the source folder: `mkdir -p /data/pg`
